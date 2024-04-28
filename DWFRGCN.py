@@ -228,12 +228,12 @@ class DWFRGCN(object):
         return A_fold_hat
 
     # 与上一层相似的给予更多的权重1
-    def cosine_similarity(self, a, b):
+    def cosine_similarity(self, a, b, alpha):
         dot_product = tf.reduce_sum(tf.multiply(a, b), axis=-1)  # 元素级相乘并求和，得到点积
         norm_a = tf.sqrt(tf.reduce_sum(tf.square(a), axis=-1))  # 计算 L2 范数
         norm_b = tf.sqrt(tf.reduce_sum(tf.square(b), axis=-1))  # 计算 L2 范数
         similarity = dot_product / (norm_a * norm_b)
-        return similarity * 0.1 + 1
+        return similarity * alpha + 1
 
     def _create_DWFRGCN_embed(self):
         if self.node_dropout_flag:
@@ -245,7 +245,8 @@ class DWFRGCN(object):
         all_embeddings = [ego_embeddings]
 
         for k in range(0, self.n_layers):
-
+            lr = 4
+            alpha = 0.1
             temp_embed = []
 
             for f in range(self.n_fold):
@@ -253,9 +254,9 @@ class DWFRGCN(object):
 
             side_embeddings = tf.concat(temp_embed, 0)
 
-            weghts = self.cosine_similarity(side_embeddings, ego_embeddings)
+            weghts = self.cosine_similarity(side_embeddings, ego_embeddings, alpha)
             side_embeddings = tf.einsum('a,ab->ab', weghts, side_embeddings)
-            if k > 2:
+            if k > lr-2:
                 ego_embeddings = ego_embeddings + side_embeddings
             else:
                 ego_embeddings = side_embeddings
