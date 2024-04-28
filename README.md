@@ -1,8 +1,11 @@
 # DWFRGCN
 
 1、本项目在lightGCN的基础上更改，环境配置可依据一下LightGCN部分；
+
 2、DWFRGCN所需Lib包太大暂时无法上传，下载后可在LightGCN的tensorflow版本代码的venv文件夹下自行获取；
-3、如需在本项目中调试LightGCN模型，在项目中的在/utility/parser.py中切换默认模型为lightgcn即可。
+
+3、如需在本项目中调试LightGCN模型，在项目中的在/utility/parser.py中切换默认模型为lightgcn即可;
+
 4、运行命令：
 Gowalla dataset
 python DWFRGCN.py --dataset gowalla --regs [1e-4] --embed_size 64 --layer_size [64,64,64,64,64,64,64,64] --lr 0.001 --batch_size 2048 --epoch 1000
